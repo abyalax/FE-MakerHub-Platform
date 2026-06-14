@@ -1,6 +1,3 @@
-Betul. Koreksi pattern-nya seperti ini:
-
-````md
 # Docs Detail Page UI Pattern
 
 ## Layout Structure
@@ -18,6 +15,7 @@ Main Layout
 ├─ Main Content
 └─ Right Related Content
 ```
+
 ````
 
 ## Top Navigation
@@ -163,5 +161,4 @@ Build a GitHub Docs-inspired detail page where:
 7. Keep layout dense, technical, and documentation-first.
 
 ```
-
-```
+````

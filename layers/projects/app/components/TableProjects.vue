@@ -5,12 +5,14 @@ import { Table } from '~/layers/shared/app/components/fragments/table';
 import type { BulkAction } from '~~/layers/shared/app/components/fragments/table';
 import { PERMISSIONS } from '~/layers/shared/app/common/const/permission';
 import ProjectTableTopActions from './ProjectTableTopActions.vue';
-import { useColumnProjects } from '~/layers/projects/app/composable/useColumnProjects.js';
-import { useTableFilterProjects } from '../composable/useTableFilterProjects.js';
-import { useTableStateProjects, type EditableProject } from '../composable/useTableStateProjects.js';
-import { useGetProjects } from '../composable/useGetProjects.js';
+import { useColumnProjects } from '~/layers/projects/app/composable/useColumnProjects';
+import { useFilterProjects } from '../composable/useFilterProjects.js';
+import { useTableStateProjects } from '../composable/useTableStateProjects';
+import { useGetProjects } from '../composable/useGetProjects';
+import type { Project } from '../../types/index';
+import ProjectExpandedRow from './ProjectExpandedRow.vue';
 
-const { queryParams, state, menuFilter, search } = useTableFilterProjects();
+const { queryParams, state, menuFilter, search } = useFilterProjects();
 const { has } = usePermission();
 const crud = useTableStateProjects();
 
@@ -20,7 +22,7 @@ const canCreate = computed(() => has(PERMISSIONS.PROJECT.CREATE));
 const canUpdate = computed(() => has(PERMISSIONS.PROJECT.UPDATE));
 const canDelete = computed(() => has(PERMISSIONS.PROJECT.DELETE));
 
-const serverRows = computed<EditableProject[]>(() =>
+const serverRows = computed<Project[]>(() =>
   (data.value?.data ?? []).map((project) => ({
     ...project,
     isNewRow: false,
@@ -35,12 +37,12 @@ const tableData = computed(() => ({
 
 const selectedRowsModel = computed({
   get: () => crud.selectedRows.value,
-  set: (value: EditableProject[]) => {
+  set: (value: Project[]) => {
     crud.selectedRows.value = value;
   },
 });
 
-const bulkActions: BulkAction<EditableProject>[] = [
+const bulkActions: BulkAction<Project>[] = [
   {
     label: 'Delete Selected',
     icon: TrashIcon,
@@ -54,7 +56,11 @@ const bulkActions: BulkAction<EditableProject>[] = [
 const columns = computed(() =>
   useColumnProjects({
     canDelete: canDelete.value,
+    canUpdate: canUpdate.value,
     crud,
+    lifecycleLoading: crud.lifecycleLoading,
+    onPublish: crud.publishProject,
+    onUnpublish: crud.unpublishProject,
   })
 );
 
@@ -72,16 +78,8 @@ const TopActions = defineComponent({
   },
 });
 
-const handleExpandedRow = (project: EditableProject) => {
-  return h('div', { class: 'space-y-1 p-4' }, [
-    h('h3', { class: 'mb-2 font-semibold' }, project.title || 'New Project'),
-    h('p', { class: 'text-sm' }, `Slug: ${project.slug || '-'}`),
-    h('p', { class: 'text-sm' }, `Category: ${project.category?.name ?? '-'}`),
-    h('p', { class: 'text-sm' }, `Mentor: ${project.mentor?.user?.name ?? '-'}`),
-    h('p', { class: 'text-sm' }, `Status: ${project.status ?? '-'}`),
-    h('p', { class: 'text-sm' }, `Access: ${project.accessType ?? '-'}`),
-    h('p', { class: 'text-sm' }, `Price: ${project.currency ?? '-'} ${project.price ?? '-'}`),
-  ]);
+const handleExpandedRow = (project: Project) => {
+  return h(ProjectExpandedRow, { project });
 };
 </script>
 
@@ -92,19 +90,37 @@ const handleExpandedRow = (project: EditableProject) => {
     v-model:search="search"
     :data="tableData"
     :columns="columns"
-    :column-ids="['select', 'title', 'slug', 'category', 'mentor', 'price', 'status', 'accessType', 'actions']"
+    :column-ids="[
+      'select',
+      'id',
+      'title',
+      'slug',
+      'coverUrl',
+      'category',
+      'mentor',
+      'price',
+      'status',
+      'accessType',
+      'publishedAt',
+      'tocJson',
+      'actions',
+    ]"
     :bulk-actions="bulkActions"
     :top-actions="TopActions"
     :expanded-row="handleExpandedRow"
     :initial-column-visibility="{
       select: true,
+      id: true,
       title: true,
       slug: true,
+      coverUrl: true,
       category: true,
       mentor: true,
       price: true,
       status: true,
       accessType: true,
+      publishedAt: true,
+      tocJson: true,
       actions: true,
     }"
     :menu-filter="menuFilter"

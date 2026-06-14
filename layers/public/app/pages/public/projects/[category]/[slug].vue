@@ -155,7 +155,7 @@ const createHeadingId = (title: string, usedIds: Map<string, number>) => {
 };
 
 const tocItems = computed<ProjectTocItem[]>(() =>
-  (project.value?.tocJson ?? []).filter(
+  (project.value?.toc ?? project.value?.tocJson ?? []).filter(
     (item): item is ProjectTocItem =>
       typeof item?.id === 'string' && item.id.length > 0 && typeof item.title === 'string' && item.title.length > 0 && typeof item.level === 'number'
   )

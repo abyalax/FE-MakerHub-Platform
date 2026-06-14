@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { ENDPOINT } from '~/layers/shared/app/common/const/endpoint';
 import { useHttp } from '~/layers/shared/app/composable/useHttp';
 import type { TResponse } from '~/layers/shared/app/types/response';
-import type { UpdateUserPayload, User } from '../types';
+import type { UpdateUserPayload, User } from '~/layers/users/app/types';
 import { QUERY_KEY } from '~/layers/shared/app/common/const/querykey';
 
 export function useUpdateUser() {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { Card, CardContent } from '~/layers/shared/app/components/ui/card';
 import { Separator } from '~/layers/shared/app/components/ui/separator';
@@ -15,13 +16,25 @@ type PublicDocsMetaItem = {
   description?: string;
 };
 
-defineProps<{
+const props = defineProps<{
   title?: string;
   links: PublicDocsRelatedLink[];
   metaItems: PublicDocsMetaItem[];
   ctaLabel: string;
+  ctaTo?: string;
+  ctaDisabled?: boolean;
+  ctaLoading?: boolean;
+  ctaAction?: () => void | Promise<void>;
   backTo?: string;
+  backLabel?: string;
 }>();
+
+const hasAction = computed(() => typeof props.ctaAction === 'function');
+
+async function handleAction() {
+  if (!props.ctaAction) return;
+  await props.ctaAction();
+}
 </script>
 
 <template>
@@ -56,10 +69,20 @@ defineProps<{
         <Separator />
 
         <div class="space-y-2">
-          <Button class="w-full">{{ ctaLabel }}</Button>
+          <Button v-if="ctaTo" as-child class="w-full" :disabled="ctaDisabled || ctaLoading">
+            <NuxtLink :to="ctaTo">{{ ctaLabel }}</NuxtLink>
+          </Button>
+
+          <Button v-else-if="hasAction" class="w-full" :disabled="ctaDisabled || ctaLoading" @click="handleAction">
+            {{ ctaLoading ? `${ctaLabel}...` : ctaLabel }}
+          </Button>
+
+          <Button v-else class="w-full" :disabled="ctaDisabled || ctaLoading">
+            {{ ctaLoading ? `${ctaLabel}...` : ctaLabel }}
+          </Button>
 
           <Button v-if="backTo" as-child variant="outline" class="w-full">
-            <NuxtLink :to="backTo">Back to projects</NuxtLink>
+            <NuxtLink :to="backTo">{{ backLabel ?? 'Back' }}</NuxtLink>
           </Button>
         </div>
       </CardContent>

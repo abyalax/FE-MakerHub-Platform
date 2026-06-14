@@ -5,7 +5,7 @@ import Page from '~~/layers/shared/app/components/layouts/Page.vue';
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { Input } from '~/layers/shared/app/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/layers/shared/app/components/ui/table';
-import type { Role } from '../types';
+import type { Role } from '~/layers/users/app/types';
 
 definePageMeta({
   middleware: 'authorization',

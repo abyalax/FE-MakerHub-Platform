@@ -3,7 +3,7 @@ import { ENDPOINT } from '~/layers/shared/app/common/const/endpoint';
 import { QUERY_KEY } from '~/layers/shared/app/common/const/querykey';
 import { useHttp } from '~/layers/shared/app/composable/useHttp';
 import type { TResponse } from '~/layers/shared/app/types/response';
-import type { Permission } from '../types';
+import type { Permission } from '~/layers/users/app/types';
 
 export function useGetPermissions() {
   const http = useHttp();

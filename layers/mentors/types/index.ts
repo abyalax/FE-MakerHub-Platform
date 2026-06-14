@@ -7,7 +7,7 @@ import type { User } from '~/layers/users/types';
 
 export interface MentorPayout {
   id: number;
-  mentorId: number;
+  mentorId: string;
   amount: string;
   currency: string;
   status: PayoutStatus;

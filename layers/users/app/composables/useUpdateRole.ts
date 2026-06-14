@@ -3,7 +3,7 @@ import { ENDPOINT } from '~/layers/shared/app/common/const/endpoint';
 import { QUERY_KEY } from '~/layers/shared/app/common/const/querykey';
 import { useHttp } from '~/layers/shared/app/composable/useHttp';
 import type { TResponse } from '~/layers/shared/app/types/response';
-import type { Role, UpdateRolePayload } from '../types';
+import type { Role, UpdateRolePayload } from '~/layers/users/app/types';
 
 export function useUpdateRole() {
   const http = useHttp();

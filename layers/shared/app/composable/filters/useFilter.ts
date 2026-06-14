@@ -2,8 +2,8 @@ import { computed, ref, watch, nextTick } from 'vue';
 import type { WritableComputedRef } from 'vue';
 import type { LocationQueryValue, LocationQueryRaw } from 'vue-router';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
-import { useDebounceFn } from '../../useDebounceFn';
-import { useTableFilterStore } from './useTableFilterStore';
+import { useDebounceFn } from '../useDebounceFn';
+import { useFilterStore } from './useFilterStore';
 import type {
   FilterFieldConfig,
   FilterFieldInput,
@@ -12,10 +12,10 @@ import type {
   NormalizedFilterFieldConfig,
   QueryParamsFor,
   TableStateFor,
-  UseTableFilterOptions,
+  UseFilterOptions,
   UseTableFilterReturn,
 } from './index';
-import type { SortOrder } from '../../../types/meta';
+import type { SortOrder } from '../../types/meta';
 
 /**
  * Generic table filter + pagination hook with automatic URL sync
@@ -32,7 +32,7 @@ import type { SortOrder } from '../../../types/meta';
  *
  * @example
  * // Auto-detected types (no explicit config needed)
- * const { state, search, filterRefs, queryParams } = useTableFilter({
+ * const { state, search, filterRefs, queryParams } = useFilter({
  *   storeKey: 'TableFilterProducts',
  *   filterFields: [
  *     'category_id',      // Auto-detected as number (ends with _id)
@@ -45,7 +45,7 @@ import type { SortOrder } from '../../../types/meta';
  *
  * @example
  * // Explicit types override auto-detection
- * const { state, search, filterRefs, queryParams } = useTableFilter({
+ * const { state, search, filterRefs, queryParams } = useFilter({
  *   storeKey: 'TableFilterUsers',
  *   filterFields: [
  *     'category_id',                           // Auto-detected: number
@@ -57,7 +57,7 @@ import type { SortOrder } from '../../../types/meta';
  *
  * @example
  * // With default values and custom debounce
- * const { state, search, filterRefs, queryParams } = useTableFilter({
+ * const { state, search, filterRefs, queryParams } = useFilter({
  *   storeKey: 'TableFilterOrders',
  *   filterFields: [
  *     { name: 'company_id', type: 'number', defaultValue: 1 },
@@ -66,12 +66,12 @@ import type { SortOrder } from '../../../types/meta';
  *   debounceSearch: 800
  * })
  */
-export function useTableFilter<const TFilterFields extends readonly FilterFieldInput[] = readonly []>(
-  options: UseTableFilterOptions<TFilterFields>
+export function useFilter<const TFilterFields extends readonly FilterFieldInput[] = readonly []>(
+  options: UseFilterOptions<TFilterFields>
 ): UseTableFilterReturn<TFilterFields> {
   const router = useRouter();
   const route = useRoute();
-  const tableFilterStore = useTableFilterStore();
+  const tableFilterStore = useFilterStore();
 
   const {
     storeKey,

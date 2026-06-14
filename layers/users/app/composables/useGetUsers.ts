@@ -4,7 +4,7 @@ import { QUERY_KEY } from '~/layers/shared/app/common/const/querykey';
 import { useHttp } from '~/layers/shared/app/composable/useHttp';
 import type { MetaRequest, Paginated } from '~/layers/shared/app/types/meta';
 import type { TResponse } from '~/layers/shared/app/types/response';
-import type { User } from '../types';
+import type { User } from '~/layers/users/app/types';
 
 export function useGetUsers(params: ComputedRef<MetaRequest>) {
   const http = useHttp();

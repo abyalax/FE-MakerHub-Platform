@@ -1,13 +1,10 @@
 import type { Header } from '@tanstack/vue-table';
 import type { CSSProperties } from 'vue';
-import { useTheme } from '~/layers/shared/app/composable/useTheme';
 
 /**
  * HOOK Style for BODY CELL (sticky horizontal - freeze columns)
  */
 export const useCreateStickyColumnStyle = <TData, TValue>(freezeIds: string[]) => {
-  const { theme } = useTheme();
-
   const createStyle = (header: Header<TData, TValue>, scrollLeft: number, isSelectedRow?: boolean): CSSProperties | undefined => {
     const id = header.column.id;
     if (!freezeIds.includes(id)) return undefined;
@@ -37,7 +34,6 @@ export const useCreateStickyColumnStyle = <TData, TValue>(freezeIds: string[]) =
       return {
         ...common,
         zIndex: 40,
-        ['--sticky-shadow']: theme.value === 'dark' ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0.10)',
       } as CSSProperties;
     }
 

@@ -3,7 +3,7 @@ import { h } from 'vue';
 import { Input } from '~/layers/shared/app/components/ui/input';
 import { createCrudSelectColumn, crudCellControlProps } from '~/layers/shared/app/composable/table/crud';
 import RoleBadge from '../components/RoleBadge.vue';
-import type { EditableUser } from './useTableStateUsers.js';
+import type { EditableUser } from './useTableStateUsers';
 import SelectUserRoles from '../components/SelectUserRoles.vue';
 
 type Params = {
@@ -90,11 +90,6 @@ export const useColumnUsers = (params: Params): ColumnDef<EditableUser>[] => {
           );
         }
 
-        return h(SelectUserRoles, {
-          user: user,
-          crud: params.crud,
-          controlProps: crudCellControlProps,
-        });
         return h(SelectUserRoles, {
           user: user,
           crud: params.crud,

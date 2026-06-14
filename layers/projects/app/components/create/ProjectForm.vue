@@ -3,40 +3,39 @@ import { computed, ref, watch } from 'vue';
 import type { JSONContent } from '@tiptap/vue-3';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import * as z from 'zod';
 import { ContentAccessType } from '~/layers/shared/app/common/enum';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/layers/shared/app/components/ui/form';
 import { Input } from '~/layers/shared/app/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/layers/shared/app/components/ui/select';
-import type { CreateProjectPayload } from '../../types';
-import ProjectContentEditor from './ProjectContentEditor.vue';
+import { createProjectSchema } from '../../schemas/create-project';
+import type { CreateProjectPayload } from '../../../types';
+import ProjectContentEditor from '../ProjectContentEditor.vue';
 
 const emptyDocument = (): JSONContent => ({
   type: 'doc',
   content: [{ type: 'paragraph' }],
 });
 
-const projectSchema = toTypedSchema(
-  z.object({
-    title: z.string().trim().min(1, 'Title is required').max(255, 'Title must be at most 255 characters'),
-    slug: z.string().trim().max(280, 'Slug must be at most 280 characters').optional(),
-    summary: z.string().trim().max(500, 'Summary must be at most 500 characters').optional(),
-    description: z.string().trim().min(1, 'Project scope is required'),
-    contentJson: z.custom<JSONContent>(),
-    accessType: z.enum(ContentAccessType),
-    price: z.coerce.number().min(0, 'Price cannot be negative'),
-    currency: z.string().trim().length(3, 'Currency must use a 3-letter code'),
-  })
-);
+const projectSchema = toTypedSchema(createProjectSchema);
 
 const contentJson = ref<JSONContent>(emptyDocument());
+
+const parseObjectives = (value?: string) =>
+  Array.from(
+    new Set(
+      (value ?? '')
+        .split(/\r?\n/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+    )
+  );
 
 const form = useForm({
   validationSchema: projectSchema,
   initialValues: {
     title: '',
-    slug: '',
     summary: '',
+    objectivesText: '',
     description: '',
     contentJson: contentJson.value,
     accessType: ContentAccessType.FREE,
@@ -59,17 +58,23 @@ const submit = async (): Promise<CreateProjectPayload | null> => {
   const result = await form.validate();
   if (!result.valid) return null;
 
-  const values = form.values;
-  return {
+  const values = createProjectSchema.parse({
+    ...form.values,
+    contentJson: contentJson.value,
+  });
+
+  const data: CreateProjectPayload = {
     title: values.title,
-    slug: values.slug || undefined,
     summary: values.summary || undefined,
     description: values.description,
-    contentJson: values.contentJson,
+    contentJson: contentJson.value,
+    objectives: parseObjectives(values.objectivesText),
     accessType: values.accessType,
     price: values.price,
-    currency: values.currency || 'IDR',
+    currency: values.currency,
   };
+
+  return data;
 };
 
 const reset = () => {
@@ -112,19 +117,26 @@ defineExpose({
             <FormMessage />
           </FormItem>
         </FormField>
-      </div>
 
-      <div class="space-y-4">
-        <FormField v-slot="{ componentField }" name="slug">
+        <FormField v-slot="{ componentField }" name="objectivesText">
           <FormItem>
-            <FormLabel>Slug</FormLabel>
+            <FormLabel>Learning objectives</FormLabel>
             <FormControl>
-              <Input v-bind="componentField" :disabled="disabled" placeholder="auto-generated" />
+              <textarea
+                v-bind="componentField"
+                :disabled="disabled"
+                rows="4"
+                class="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 min-h-28 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="One objective per line, e.g.&#10;Design an idempotent queue worker&#10;Implement retry and dead-letter handling"
+              />
             </FormControl>
+            <p class="text-xs text-muted-foreground">Each non-empty line is saved as one public learning objective.</p>
             <FormMessage />
           </FormItem>
         </FormField>
+      </div>
 
+      <div class="space-y-4">
         <FormField v-slot="{ componentField }" name="accessType">
           <FormItem>
             <FormLabel>Access</FormLabel>
@@ -143,7 +155,7 @@ defineExpose({
           </FormItem>
         </FormField>
 
-        <div class="grid grid-cols-[minmax(0,1fr)_5rem] gap-3">
+        <div class="grid grid-cols-[minmax(0,1fr)_8rem] gap-3">
           <FormField v-slot="{ componentField }" name="price">
             <FormItem>
               <FormLabel>Price</FormLabel>
@@ -157,9 +169,16 @@ defineExpose({
           <FormField v-slot="{ componentField }" name="currency">
             <FormItem>
               <FormLabel>Currency</FormLabel>
-              <FormControl>
-                <Input v-bind="componentField" :disabled="disabled" maxlength="3" />
-              </FormControl>
+              <Select v-bind="componentField" :disabled="disabled">
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="IDR">IDR (Rupiah)</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           </FormField>

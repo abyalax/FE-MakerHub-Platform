@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from '~/layers/shared/app/components/ui/button';
-import type { User } from '../types';
+import type { User } from '~/layers/users/app/types';
 
 defineProps<{
   user: User;

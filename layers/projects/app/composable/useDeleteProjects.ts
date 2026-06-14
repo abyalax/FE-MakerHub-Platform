@@ -3,6 +3,7 @@ import { ENDPOINT } from '~/layers/shared/app/common/const/endpoint';
 import { QUERY_KEY } from '~/layers/shared/app/common/const/querykey';
 import { useHttp } from '~/layers/shared/app/composable/useHttp';
 import type { TResponse } from '~/layers/shared/app/types/response';
+import type { Project } from '../../types';
 
 export function useDeleteProject() {
   const http = useHttp();
@@ -10,7 +11,7 @@ export function useDeleteProject() {
   const { $toast } = useNuxtApp();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: Project['id']) => {
       const response = await http<TResponse<boolean>>(ENDPOINT.PROJECTS.DETAIL(id), {
         method: 'DELETE',
       });

@@ -21,18 +21,18 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const defaultStyles: Record<string, string> = {
-  draft: 'bg-amber-100 text-amber-800 border-amber-200',
-  published: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  cancelled: 'bg-rose-100 text-rose-800 border-rose-200',
-  completed: 'bg-sky-100 text-sky-800 border-sky-200',
-  pending: 'bg-purple-100 text-purple-800 border-purple-200',
+  draft: 'border-border bg-muted text-muted-foreground',
+  published: 'border-primary bg-primary text-primary-foreground',
+  cancelled: 'border-destructive bg-destructive text-destructive-foreground',
+  completed: 'border-primary bg-primary text-primary-foreground',
+  pending: 'border-accent bg-accent text-accent-foreground',
 };
 
 const badgeClass = computed(() => {
   const key = status.value?.toLowerCase() ?? '';
   // Merge default styles with custom styles from props
   const styles = { ...defaultStyles, ...props.customStyles };
-  return styles[key] ?? 'bg-slate-100 text-slate-800 border-slate-200';
+  return styles[key] ?? 'border-border bg-secondary text-secondary-foreground';
 });
 </script>
 

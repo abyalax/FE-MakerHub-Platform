@@ -20,6 +20,11 @@ export interface ProjectPublic {
     level: number;
     title: string;
   }[];
+  toc?: {
+    id: string;
+    level: number;
+    title: string;
+  }[];
   accessType: ContentAccessType;
   price: number;
   currency: string;
@@ -32,4 +37,8 @@ export interface ProjectPublic {
     headline: string;
   };
   objectives?: string[];
+  hasLearning?: boolean;
+  learningSlug?: string;
+  learningCategorySlug?: string;
+  learningTitle?: string;
 }

@@ -6,10 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { Card, CardContent, CardFooter, CardHeader } from '~/layers/shared/app/components/ui/card';
 import { Badge } from '~/layers/shared/app/components/ui/badge';
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from '~/layers/shared/app/components/ui/pagination';
-import { useTableFilter } from '~/layers/shared/app/composable/table/filters/useTableFilter';
+import { useFilter } from '~/layers/shared/app/composable/filters/useFilter';
 import { useGetProjectPublics } from '../../../composable/useGetProjectPublics';
 
-const { state, queryParams, search, filterRefs, resetFilters } = useTableFilter({
+const { state, queryParams, search, filterRefs, resetFilters } = useFilter({
   storeKey: 'TableFilterProjectsPublics',
   filterFields: [{ name: 'featured', type: 'boolean' }, 'category'],
   syncUrl: true,
@@ -28,6 +28,14 @@ const featuredModel = computed({
   },
   set: (value: string) => {
     filterRefs.featured.value = value === 'all' ? null : value === 'true';
+  },
+});
+
+const categoryModel = computed({
+  get: () => filterRefs.category.value ?? '',
+  set: (value: string | number) => {
+    const normalizedValue = String(value).trim();
+    filterRefs.category.value = normalizedValue || null;
   },
 });
 
@@ -65,7 +73,7 @@ function formatPrice(price?: number | null, currency = 'IDR') {
     <div class="mb-6 grid gap-3 md:grid-cols-[1fr_220px_180px]">
       <Input v-model="search" type="search" placeholder="Search projects..." />
 
-      <Input v-model="filterRefs.category" type="text" placeholder="Category slug" />
+      <Input v-model="categoryModel" type="text" placeholder="Category slug" />
 
       <Select v-model="featuredModel">
         <SelectTrigger class="w-full">
@@ -128,7 +136,13 @@ function formatPrice(price?: number | null, currency = 'IDR') {
 
         <CardFooter>
           <Button as-child class="w-full">
-            <NuxtLink :to="`/public/projects/${project.category.slug}/${project.slug}`"> View project </NuxtLink>
+            <NuxtLink
+              v-if="project.hasLearning && project.learningSlug && project.learningCategorySlug"
+              :to="`/public/learning/${project.learningCategorySlug}/${project.learningSlug}`"
+            >
+              Start Learning
+            </NuxtLink>
+            <NuxtLink v-else :to="`/public/projects/${project?.category?.slug}/${project?.slug}`"> View Project </NuxtLink>
           </Button>
         </CardFooter>
       </Card>
@@ -142,22 +156,27 @@ function formatPrice(price?: number | null, currency = 'IDR') {
       </CardContent>
     </Card>
 
-    <div v-if="totalPages > 1" class="mt-8 flex items-center justify-between gap-4">
-      <p class="text-sm text-muted-foreground">Page {{ currentPage }} of {{ totalPages }}</p>
+    <div v-if="totalPages > 1" class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t pt-4">
+      <p class="text-sm text-muted-foreground whitespace-nowrap">Page {{ currentPage }} of {{ totalPages }}</p>
 
       <Pagination :page="currentPage" :total="pagination?.totalItems ?? 0" :items-per-page="pagination?.itemsPerPage ?? 10">
-        <PaginationContent>
-          <PaginationItem>
+        <PaginationContent class="flex flex-row items-center gap-1 sm:gap-2 list-none m-0 p-0">
+          <PaginationItem :value="Math.max(currentPage - 1, 1)">
             <PaginationPrevious href="#" :class="{ 'pointer-events-none opacity-50': currentPage <= 1 }" @click.prevent="goToPage(currentPage - 1)" />
           </PaginationItem>
 
-          <PaginationItem v-for="page in totalPages" :key="page">
-            <Button :variant="page === currentPage ? 'default' : 'outline'" size="icon" @click="goToPage(page)">
+          <PaginationItem v-for="page in totalPages" :key="page" :value="page">
+            <Button
+              :variant="page === currentPage ? 'default' : 'outline'"
+              size="icon"
+              class="h-9 w-9 flex items-center justify-center p-0"
+              @click="goToPage(page)"
+            >
               {{ page }}
             </Button>
           </PaginationItem>
 
-          <PaginationItem>
+          <PaginationItem :value="Math.min(currentPage + 1, totalPages)">
             <PaginationNext
               href="#"
               :class="{ 'pointer-events-none opacity-50': currentPage >= totalPages }"

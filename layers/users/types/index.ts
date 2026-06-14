@@ -32,3 +32,13 @@ export interface UpdateUserPayload {
   password?: string;
   roleIds?: number[];
 }
+
+export interface CreateRolePayload {
+  name: string;
+  permissionIds?: number[];
+}
+
+export interface UpdateRolePayload {
+  name?: string;
+  permissionIds?: number[];
+}

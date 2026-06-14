@@ -4,7 +4,7 @@ defineProps<{ role: string }>();
 
 <template>
   <span
-    class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-medium"
+    class="rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
   >
     {{ role }}
   </span>

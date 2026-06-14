@@ -1,6 +1,7 @@
 <script setup lang="ts">
 type PublicDocsTocGroup = {
   title: string;
+  collapsible?: boolean;
   items: {
     label: string;
     href: string;
@@ -35,22 +36,29 @@ function selectItem(event: MouseEvent, item: PublicDocsTocGroup['items'][number]
         <p v-if="versionLabel" class="text-xs text-muted-foreground">{{ versionLabel }}</p>
       </div>
 
-      <nav class="space-y-5 text-sm">
-        <section v-for="group in groups" :key="group.title" class="space-y-2">
-          <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{{ group.title }}</p>
+      <nav class="space-y-4 text-sm">
+        <section v-for="group in groups" :key="group.title">
+          <details :open="!group.collapsible" class="group space-y-2">
+            <summary
+              class="flex cursor-pointer list-none items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground [&::-webkit-details-marker]:hidden"
+            >
+              <span>{{ group.title }}</span>
+              <span v-if="group.collapsible" class="text-muted-foreground transition-transform group-open:rotate-90">›</span>
+            </summary>
 
-          <ul class="space-y-1">
-            <li v-for="item in group.items" :key="item.href">
-              <a
-                :href="item.href"
-                class="block border-l-2 py-1.5 pl-3 transition-colors hover:border-primary hover:text-foreground"
-                :class="item.active ? 'border-primary font-medium text-foreground' : 'border-transparent text-muted-foreground'"
-                @click="selectItem($event, item)"
-              >
-                {{ item.label }}
-              </a>
-            </li>
-          </ul>
+            <ul class="mt-2 space-y-1">
+              <li v-for="item in group.items" :key="item.href">
+                <a
+                  :href="item.href"
+                  class="block border-l-2 py-1.5 pl-3 transition-colors hover:border-primary hover:text-foreground"
+                  :class="item.active ? 'border-primary font-medium text-foreground' : 'border-transparent text-muted-foreground'"
+                  @click="selectItem($event, item)"
+                >
+                  {{ item.label }}
+                </a>
+              </li>
+            </ul>
+          </details>
         </section>
       </nav>
     </div>

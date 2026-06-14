@@ -1,4 +1,4 @@
-import { LayoutDashboard, Settings, User2, ShieldCheck, Box } from 'lucide-vue-next';
+import { BookOpen, LayoutDashboard, Settings, User2, ShieldCheck, Box } from 'lucide-vue-next';
 import type { Component } from 'vue';
 import { PERMISSIONS } from '../../../common/const/permission';
 
@@ -56,6 +56,12 @@ export const sidebarItems = (): MenuGroup[] => [
         url: '/projects',
         icon: Box,
         permissions: [PERMISSIONS.PROJECT.READ],
+      },
+      {
+        title: 'Learning',
+        url: '/mentor/learning',
+        icon: BookOpen,
+        permissions: [PERMISSIONS.LEARNING.READ],
       },
     ],
   },

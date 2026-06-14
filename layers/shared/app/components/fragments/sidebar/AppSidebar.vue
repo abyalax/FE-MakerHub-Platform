@@ -105,7 +105,7 @@ const isActive = (url: string) => path === url;
 
     <!-- Footer With User Information -->
     <SidebarFooter>
-      <SidebarUser :user="{ email: user?.email, name: user?.name }" />
+      <SidebarUser />
     </SidebarFooter>
   </Sidebar>
 </template>

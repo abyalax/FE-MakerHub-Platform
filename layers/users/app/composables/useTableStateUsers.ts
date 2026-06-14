@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/vue-query';
 import { QUERY_KEY } from '~/layers/shared/app/common/const/querykey';
 import { useInlineCrud } from '~/layers/shared/app/composable/table/states/useInlineCrud';
-import type { Role, User } from '../types';
+import type { Role, User } from '~/layers/users/app/types';
 
 export type EditableUser = User & {
   password?: string;

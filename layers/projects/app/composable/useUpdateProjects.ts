@@ -11,7 +11,7 @@ export function useUpdateProject() {
   const { $toast } = useNuxtApp();
 
   return useMutation({
-    mutationFn: async (params: { id: number; payload: UpdateProjectPayload }) => {
+    mutationFn: async (params: { id: Project['id']; payload: UpdateProjectPayload }) => {
       const response = await http<TResponse<Project>>(ENDPOINT.PROJECTS.DETAIL(params.id), {
         method: 'PUT',
         body: params.payload,

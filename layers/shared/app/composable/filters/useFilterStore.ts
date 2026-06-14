@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { StoredTable, TableFilterStoreState, TableState } from '.';
 
-export const useTableFilterStore = defineStore('tableFilter', {
+export const useFilterStore = defineStore('filters', {
   state: (): TableFilterStoreState => ({
     tables: {},
   }),

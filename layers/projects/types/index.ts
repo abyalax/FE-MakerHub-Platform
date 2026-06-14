@@ -114,23 +114,25 @@ export interface ProjectSection {
 }
 
 export interface Project {
-  id: number;
-  mentorId: number;
+  id: string | number;
+  mentorId: string;
   authorId: string;
   categoryId?: number | undefined;
-  coverAssetId?: number | undefined;
+  coverAssetId?: string | number | undefined;
+  coverUrl?: string | null | undefined;
   title: string;
   slug: string;
   summary?: string | undefined;
   description: string;
-  contentJson?: JSONContent | undefined;
-  tocJson?: { id: string; title: string; level: number }[] | undefined;
-  objectives?: unknown;
+  contentJson?: JSONContent | null | undefined;
+  tocJson?: { id: string; title: string; level: number }[] | null | undefined;
+  toc?: { id: string; title: string; level: number }[] | null | undefined;
+  objectives?: string[];
   accessType: ContentAccessType;
-  status: ContentStatus;
-  price: string;
+  status?: ContentStatus | undefined;
+  price: number;
   currency: string;
-  publishedAt?: Date;
+  publishedAt?: Date | string | null | undefined;
   createdAt: Date;
   updatedAt: Date;
   mentor: MentorProfile;
@@ -150,7 +152,6 @@ export interface Project {
 
 export interface CreateProjectPayload {
   title: string;
-  slug?: string;
   summary?: string;
   description: string;
   contentJson?: JSONContent;
@@ -160,7 +161,7 @@ export interface CreateProjectPayload {
   coverAssetId?: string;
   accessType: ContentAccessType;
   status?: ContentStatus;
-  price: number | string;
+  price: number;
   currency?: string;
 }
 

@@ -17,7 +17,7 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/layers/shared/app/components/ui/tooltip';
 
 import type { AcceptableValue } from 'reka-ui';
-import type { TableState } from '~/layers/shared/app/composable/table/filters';
+import type { TableState } from '~/layers/shared/app/composable/filters';
 import type { Component } from 'vue';
 import BulkActions from './BulkActions.vue';
 import ColumnVisibilitySelector from './ColumnVisibilitySelector.vue';

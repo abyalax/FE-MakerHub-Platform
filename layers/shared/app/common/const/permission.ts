@@ -25,6 +25,13 @@ export const PERMISSIONS = Object.freeze({
     UPDATE: 'project:update',
     DELETE: 'project:delete',
   },
+
+  LEARNING: {
+    CREATE: 'class:create',
+    READ: 'class:read',
+    UPDATE: 'class:update',
+    DELETE: 'class:delete',
+  },
 } as const);
 
 export const permissionsList: Permission[] = [

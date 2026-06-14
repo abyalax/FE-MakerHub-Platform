@@ -36,7 +36,7 @@ defineProps<RadioItemProps>();
       <CircleCheck
         :class="
           cn(
-            'fill-primary size-6 stroke-white',
+            'fill-primary size-6 stroke-primary-foreground',
             'group-data-[state=unchecked]:hidden',
             'absolute top-0 right-0 translate-x-1/2 -translate-y-1/2',
           )

@@ -4,11 +4,12 @@ import { defineComponent, h } from 'vue';
 import { Table } from '~/layers/shared/app/components/fragments/table';
 import type { BulkAction } from '~~/layers/shared/app/components/fragments/table';
 import { PERMISSIONS } from '~/layers/shared/app/common/const/permission';
+import type { User } from '~/layers/users/app/types';
 import type { EditableUser } from '../composables/useTableStateUsers';
 import { useColumnUsers } from '../composables/useColumnUsers';
 import UserTableTopActions from './UserTableTopActions.vue';
 
-const { queryParams, state, menuFilter, search } = useTableFilterUsers();
+const { queryParams, state, menuFilter, search } = useFilterUsers();
 const { has } = usePermission();
 const crud = useTableStateUsers();
 
@@ -20,7 +21,7 @@ const canDelete = computed(() => has(PERMISSIONS.USER.DELETE));
 const serverRows = computed<EditableUser[]>(() =>
   (data.value?.data ?? []).map((user) => ({
     ...user,
-    roleIds: user.roles.map((role) => role.id),
+    roleIds: user.roles.map((role: User['roles'][number]) => role.id),
     isNewRow: false,
   }))
 );
@@ -74,7 +75,7 @@ const handleExpandedRow = (user: EditableUser) => {
   return h('div', { class: 'p-4' }, [
     h('h3', { class: 'font-semibold mb-2' }, `Details for ${user.name || 'New user'}`),
     h('p', { class: 'text-sm' }, `Email: ${user.email || '-'}`),
-    h('p', { class: 'text-sm' }, `Roles: ${user.roles.map((role) => role.name).join(', ') || '-'}`),
+    h('p', { class: 'text-sm' }, `Roles: ${user.roles.map((role: User['roles'][number]) => role.name).join(', ') || '-'}`),
   ]);
 };
 </script>

@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-vue-next';
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { Dialog, DialogFooter, DialogHeader, DialogScrollContent, DialogTitle } from '~/layers/shared/app/components/ui/dialog';
 import { useCreateProject } from '../../composable/useCreateProjects';
-import ProjectForm from '../ProjectForm.vue';
+import ProjectForm from './ProjectForm.vue';
 
 const open = defineModel<boolean>('open', { default: false });
 const emit = defineEmits<{
@@ -50,9 +50,7 @@ watch(open, (value) => {
       </div>
 
       <DialogFooter class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
-        <Button type="button" variant="outline" class="w-full sm:w-auto" :disabled="isPending" @click="handleOpenChange(false)">
-          Cancel
-        </Button>
+        <Button type="button" variant="outline" class="w-full sm:w-auto" :disabled="isPending" @click="handleOpenChange(false)"> Cancel </Button>
         <Button type="button" class="w-full sm:w-auto" data-testid="submit-projects" :disabled="isPending" @click="submit">
           <Loader2 v-if="isPending" class="size-4 animate-spin" />
           {{ isPending ? 'Submitting...' : 'Submit Project' }}

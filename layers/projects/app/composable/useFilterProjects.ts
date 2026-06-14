@@ -1,9 +1,9 @@
-import { useTableFilter } from '~/layers/shared/app/composable/table/filters/useTableFilter';
-import FilterRoleUsers from '../components/filters/FilterRoleUsers.vue';
+import { useFilter } from '~/layers/shared/app/composable/filters/useFilter.js';
+import FilterRoleUsers from '~/layers/users/app/components/filters/FilterRoleUsers.vue';
 
-export function useTableFilterUsers() {
-  const { state, filterRefs, queryParams, search } = useTableFilter({
-    storeKey: 'TableFilterUsers',
+export function useFilterProjects() {
+  const { state, filterRefs, queryParams, search } = useFilter({
+    storeKey: 'TableFilterProjects',
     filterFields: ['role_id', 'is_active'],
     debounceSearch: 500,
     debounceFilters: 300,

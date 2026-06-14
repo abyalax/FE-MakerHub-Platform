@@ -5,7 +5,7 @@ import { QUERY_KEY } from '~/layers/shared/app/common/const/querykey';
 import { useHttp } from '~/layers/shared/app/composable/useHttp';
 import type { Paginated } from '~/layers/shared/app/types/meta';
 import type { TResponse } from '~/layers/shared/app/types/response';
-import type { Role } from '../../types';
+import type { Role } from '~/layers/users/app/types';
 
 const roleId = defineModel<number | null>('roleId', {
   required: true,

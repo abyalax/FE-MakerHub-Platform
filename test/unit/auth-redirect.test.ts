@@ -45,7 +45,7 @@ describe('auth redirects', () => {
   it('redirects unauthenticated protected routes to login with redirect query', async () => {
     const middleware = (await import('../../layers/auth/app/middleware/authorization')).default;
 
-    const result = middleware({
+    const result = (middleware as any)({
       path: '/users',
       fullPath: '/users?page=2',
       meta: {
@@ -66,7 +66,7 @@ describe('auth redirects', () => {
   it('runs the authorization guard globally for routes with auth meta', async () => {
     const middleware = (await import('../../layers/auth/app/middleware/authorization.global')).default;
 
-    const result = middleware({
+    const result = (middleware as any)({
       path: '/dashboard',
       fullPath: '/dashboard',
       meta: {
@@ -86,7 +86,7 @@ describe('auth redirects', () => {
   it('redirects unauthenticated dashboard access even when route meta is missing', async () => {
     const middleware = (await import('../../layers/auth/app/middleware/authorization.global')).default;
 
-    const result = middleware({
+    const result = (middleware as any)({
       path: '/dashboard',
       fullPath: '/dashboard',
       meta: {},
@@ -104,7 +104,7 @@ describe('auth redirects', () => {
   it('allows public routes without authentication', async () => {
     const middleware = (await import('../../layers/auth/app/middleware/authorization.global')).default;
 
-    const result = middleware({
+    const result = (middleware as any)({
       path: '/public/projects/demo',
       fullPath: '/public/projects/demo',
       meta: {},
@@ -120,7 +120,7 @@ describe('auth redirects', () => {
 
     const middleware = (await import('../../layers/auth/app/middleware/authorization')).default;
 
-    const result = middleware({
+    const result = (middleware as any)({
       path: '/roles',
       fullPath: '/roles',
       meta: {
@@ -140,7 +140,7 @@ describe('auth redirects', () => {
 
     const middleware = (await import('../../layers/auth/app/middleware/authorization')).default;
 
-    const result = middleware({
+    const result = (middleware as any)({
       path: '/users',
       fullPath: '/users',
       meta: {

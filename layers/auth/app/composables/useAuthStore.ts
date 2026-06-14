@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { User } from '~/layers/users/app/types';
+import type { User } from '~/layers/users/types';
 import type { AuthState } from './types';
 import { computed, ref, watch } from 'vue';
 import type { TResponse } from '~/layers/shared/app/types/response';

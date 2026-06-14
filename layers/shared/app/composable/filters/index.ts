@@ -1,5 +1,5 @@
 import type { ComputedRef, WritableComputedRef } from 'vue';
-import type { SortOrder } from '../../../types/meta';
+import type { SortOrder } from '../../types/meta';
 
 export type FilterFieldType = 'number' | 'boolean' | 'string' | 'array';
 
@@ -64,14 +64,14 @@ export type NormalizedFilterFieldConfig<TName extends string = string> = Require
   Pick<FilterFieldConfig<TName, FilterFieldType>, 'debounceMs'>;
 
 /**
- * Options to configure useTableFilter hook
+ * Options to configure useFilter hook
  */
-export interface UseTableFilterOptions<TFilterFields extends readonly FilterFieldInput[] = readonly FilterFieldInput[]> {
+export interface UseFilterOptions<TFilterFields extends readonly FilterFieldInput[] = readonly FilterFieldInput[]> {
   /**
    * Identifier for the table filter state in the global Pinia store.
    * Required so state remains isolated per table/module.
    * Convention: use `TableFilter` + module name, for example
-   * `useTableFilterProducts()` -> `TableFilterProducts`.
+   * `useFilterProducts()` -> `TableFilterProducts`.
    */
   storeKey: string;
 
@@ -152,7 +152,7 @@ export type TableStateFor<TFilterFields extends readonly FilterFieldInput[] = re
 >;
 
 /**
- * Return type of useTableFilter hook
+ * Return type of useFilter hook
  */
 export interface UseTableFilterReturn<TFilterFields extends readonly FilterFieldInput[] = readonly FilterFieldInput[]> {
   /**

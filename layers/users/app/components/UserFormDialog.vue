@@ -2,7 +2,7 @@
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/layers/shared/app/components/ui/dialog';
 import { Input } from '~/layers/shared/app/components/ui/input';
-import type { Role, User } from '../types';
+import type { Role, User } from '~/layers/users/app/types';
 
 const open = defineModel<boolean>('open', { default: false });
 const props = defineProps<{

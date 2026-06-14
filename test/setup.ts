@@ -1,21 +1,17 @@
-/**
- * Vitest Global Setup
- * Este arquivo é executado antes de todos os testes
- */
-import { config } from '@vue/test-utils'
-import { vi } from 'vitest'
+import { config } from '@vue/test-utils';
+import { vi } from 'vitest';
 
 // Mock global do Nuxt
 vi.mock('#app', () => ({
   defineNuxtPlugin: vi.fn((plugin) => plugin),
   useNuxtApp: () => ({
     $pinia: {},
-    callHook: vi.fn()
+    callHook: vi.fn(),
   }),
   useRuntimeConfig: () => ({
     public: {
-      apiBaseUrl: 'http://localhost:3000/api'
-    }
+      apiBaseUrl: 'http://localhost:3000/api',
+    },
   }),
   navigateTo: vi.fn(),
   useFetch: vi.fn(),
@@ -24,12 +20,12 @@ vi.mock('#app', () => ({
   useRoute: vi.fn(() => ({
     params: {},
     query: {},
-    path: '/'
+    path: '/',
   })),
   useRouter: vi.fn(() => ({
     push: vi.fn(),
     replace: vi.fn(),
-    back: vi.fn()
+    back: vi.fn(),
   })),
   defineNuxtRouteMiddleware: vi.fn((middleware) => middleware),
   abortNavigation: vi.fn(),
@@ -37,24 +33,24 @@ vi.mock('#app', () => ({
   useState: vi.fn((_key, init) => ({ value: init ? init() : undefined })),
   clearNuxtState: vi.fn(),
   refreshNuxtData: vi.fn(),
-  clearNuxtData: vi.fn()
-}))
+  clearNuxtData: vi.fn(),
+}));
 
 // Configuração global do Vue Test Utils
 config.global.stubs = {
   NuxtLink: {
-    template: '<a><slot /></a>'
+    template: '<a><slot /></a>',
   },
   ClientOnly: {
-    template: '<slot />'
+    template: '<slot />',
   },
   NuxtImg: {
-    template: '<img />'
+    template: '<img />',
   },
   Icon: {
-    template: '<span />'
-  }
-}
+    template: '<span />',
+  },
+};
 
 // Suppress Vue warnings in tests (optional)
-config.global.config.warnHandler = () => {}
+config.global.config.warnHandler = () => {};

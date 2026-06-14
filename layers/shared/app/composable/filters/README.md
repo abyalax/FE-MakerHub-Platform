@@ -1,4 +1,4 @@
-# useTableFilter Hook
+# useFilter Hook
 
 A reusable Vue 3 composable for managing table state, filters, pagination, sorting, and URL synchronization. Provides automatic type detection, debouncing, and zero watcher loops.
 
@@ -14,10 +14,10 @@ A reusable Vue 3 composable for managing table state, filters, pagination, sorti
 ## Quick Start
 
 ```js
-import { useTableFilter } from '@/hooks/filters/useTableFilter';
+import { useFilter } from '@/hooks/filters/useFilter';
 
 // Basic usage with auto-detected types
-const { state, search, filterRefs, queryParams, updateOptions } = useTableFilter({
+const { state, search, filterRefs, queryParams, updateOptions } = useFilter({
   filterFields: [
     'category_id', // Auto-detected as number (ends with _id)
     'is_active', // Auto-detected as boolean (starts with is_)
@@ -31,7 +31,7 @@ const { state, search, filterRefs, queryParams, updateOptions } = useTableFilter
 ### Options
 
 ```ts
-interface UseTableFilterOptions {
+interface UseFilterOptions {
   filterFields?: Array<FilterFieldConfig | string>;
   sortParam?: 'sort' | 'sort_by'; // Default: 'sort_by'
   debounceSearch?: number; // Default: 500ms
@@ -92,8 +92,8 @@ All other fields default to `string` type.
 
 ```js
 // All field types auto-detected from naming patterns
-export function useTableFilterProducts() {
-  return useTableFilter({
+export function useFilterProducts() {
+  return useFilter({
     filterFields: [
       'category_id', // Auto: number
       'brand_id', // Auto: number
@@ -112,8 +112,8 @@ export function useTableFilterProducts() {
 
 ```js
 // Override auto-detection when needed
-export function useTableFilterUsers() {
-  return useTableFilter({
+export function useFilterUsers() {
+  return useFilter({
     filterFields: [
       'user_id', // Auto: number
       { name: 'postal_code', type: 'number' }, // Override: number
@@ -131,8 +131,8 @@ export function useTableFilterUsers() {
 
 ```js
 // Set default values for filters
-export function useTableFilterOrders() {
-  return useTableFilter({
+export function useFilterOrders() {
+  return useFilter({
     filterFields: [
       { name: 'status', type: 'string', defaultValue: 'pending' },
       { name: 'priority', type: 'string', defaultValue: 'normal' },
@@ -149,8 +149,8 @@ export function useTableFilterOrders() {
 
 ```js
 // Handle array filters (multi-select)
-export function useTableFilterProducts() {
-  return useTableFilter({
+export function useFilterProducts() {
+  return useFilter({
     filterFields: [
       { name: 'categories', type: 'array' }, // Multi-select categories
       { name: 'tags', type: 'array' }, // Multi-select tags
@@ -164,8 +164,8 @@ export function useTableFilterProducts() {
 
 ```js
 // Different debounce timings per field
-export function useTableFilterSearch() {
-  return useTableFilter({
+export function useFilterSearch() {
+  return useFilter({
     filterFields: [
       { name: 'search_query', type: 'string', debounceMs: 1000 }, // Slow search
       { name: 'category', type: 'string', debounceMs: 200 }, // Fast filter
@@ -183,9 +183,9 @@ export function useTableFilterSearch() {
 
 ```vue
 <script setup>
-import { useTableFilter } from '@/hooks/filters/useTableFilter';
+import { useFilter } from '@/hooks/filters/useFilter';
 
-const { state, search, filterRefs, sortByModel, queryParams, updateOptions } = useTableFilter({
+const { state, search, filterRefs, sortByModel, queryParams, updateOptions } = useFilter({
   filterFields: [{ name: 'status', type: 'string', defaultValue: 'active' }, { name: 'category_id', type: 'number' }, 'is_featured'],
   sortParam: 'sort',
 });
@@ -223,8 +223,8 @@ const { data, loading } = await fetchProducts(queryParams.value);
 
 ```js
 // Map internal field names to different URL parameter names
-export function useTableFilterLegacy() {
-  const { state, queryParams } = useTableFilter({
+export function useFilterLegacy() {
+  const { state, queryParams } = useFilter({
     filterFields: ['status', 'category'],
     syncUrl: true, // Still sync to URL
   });
@@ -245,11 +245,11 @@ export function useTableFilterLegacy() {
 
 ```js
 // Add/remove filters based on conditions
-export function useTableFilterDynamic(hasAdvancedFilters) {
+export function useFilterDynamic(hasAdvancedFilters) {
   const baseFields = ['search', 'status'];
   const advancedFields = ['category', 'brand', 'price_range'];
 
-  return useTableFilter({
+  return useFilter({
     filterFields: [...baseFields, ...(hasAdvancedFilters ? advancedFields : [])],
   });
 }

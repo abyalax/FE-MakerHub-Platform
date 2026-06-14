@@ -1,4 +1,4 @@
-import type { User } from '~/layers/users/app/types';
+import type { User } from '~/layers/users/types';
 
 export interface LoginCredentials {
   email: string;
