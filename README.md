@@ -89,10 +89,10 @@ http://localhost:3000
 
 After the backend migrations and seeders have run, use one of these seeded accounts:
 
-| Role | Name | Email | Password |
-| --- | --- | --- | --- |
-| Admin | Alex Admin | `admin@gmail.com` | `Password1_` |
-| Mentor | Rezi Mentor | `rezi.mentor@gmail.com` | `Password1_` |
+| Role    | Name         | Email                    | Password     |
+| ------- | ------------ | ------------------------ | ------------ |
+| Admin   | Alex Admin   | `admin@gmail.com`        | `Password1_` |
+| Mentor  | Rezi Mentor  | `rezi.mentor@gmail.com`  | `Password1_` |
 | Student | Lexi Student | `lexi.student@gmail.com` | `Password1_` |
 
 ## Useful Commands
