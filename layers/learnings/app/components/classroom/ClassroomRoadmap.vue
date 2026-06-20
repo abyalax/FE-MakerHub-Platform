@@ -89,7 +89,7 @@ function getOrderedLessons(section: ClassroomSection) {
 
 <template>
   <aside
-    :class="['flex h-full min-h-0 flex-col overflow-hidden bg-card text-card-foreground', compact ? 'rounded-none' : 'rounded-4xl border shadow-sm']"
+    :class="['flex h-full min-h-0 flex-col overflow-hidden bg-card text-card-foreground', compact ? 'rounded-none' : 'rounded-2xl border shadow-sm']"
   >
     <header class="border-b p-5">
       <div class="flex items-start justify-between gap-4">
@@ -124,10 +124,7 @@ function getOrderedLessons(section: ClassroomSection) {
           <div class="min-w-0 flex-1">
             <h2 class="truncate text-sm font-bold text-foreground">{{ projectItem.project.title }}</h2>
             <div class="mt-1 flex items-center gap-2">
-              <Progress
-                :model-value="classroomStore.getProjectProgress(projectItem)"
-                class="h-1.5 bg-muted"
-              />
+              <Progress :model-value="classroomStore.getProjectProgress(projectItem)" class="h-1.5 bg-muted" />
               <span class="text-xs font-semibold text-muted-foreground">{{ classroomStore.getProjectProgress(projectItem) }}%</span>
             </div>
           </div>

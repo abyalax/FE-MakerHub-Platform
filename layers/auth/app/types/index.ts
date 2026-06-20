@@ -14,3 +14,14 @@ export interface RegisterPayload {
   password: string;
   role?: 'mentor' | 'student';
 }
+
+export interface LoginFormProps {
+  redirectUrl?: string;
+}
+
+export interface PermissionGuardProps {
+  permission?: string;
+  permissions?: string[];
+  requireAll?: boolean;
+  fallback?: boolean;
+}

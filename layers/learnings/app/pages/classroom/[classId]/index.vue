@@ -20,7 +20,8 @@ const title = computed(() => {
 });
 const description = computed(() => {
   if (resumeErrorMessage.value) return resumeErrorMessage.value;
-  if (hasNoLesson.value) return 'The class is enrolled, but the backend did not return a lesson. Start the first available lesson or retry after reseeding.';
+  if (hasNoLesson.value)
+    return 'The class is enrolled, but the backend did not return a lesson. Start the first available lesson or retry after reseeding.';
   return 'We are finding your most recent learning position and will redirect automatically.';
 });
 
@@ -78,7 +79,7 @@ onMounted(resumeClassroom);
   <ClassroomLoadingState v-if="isBusy && !resumeAttempted && !resumeErrorMessage" />
 
   <main v-else class="grid min-h-screen place-items-center bg-background p-6">
-    <section class="max-w-xl rounded-4xl border bg-card p-8 text-center shadow-sm">
+    <section class="max-w-xl rounded-2xl border bg-card p-8 text-center shadow-sm">
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Classroom resume</p>
       <h1 class="mt-3 text-3xl font-black tracking-tight text-foreground">{{ title }}</h1>
       <p class="mt-3 text-sm text-muted-foreground">{{ description }}</p>

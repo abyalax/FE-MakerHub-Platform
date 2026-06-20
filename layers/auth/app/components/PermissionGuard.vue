@@ -15,27 +15,9 @@
  *   </PermissionGuard>
  */
 
-interface Props {
-  /**
-   * Single permission key or array of keys
-   */
-  permission?: string;
-  permissions?: string[];
+import type { PermissionGuardProps } from '../types';
 
-  /**
-   * AND logic if true, OR if false
-   * Default: false (OR)
-   */
-  requireAll?: boolean;
-
-  /**
-   * Render fallback slot if not authorized
-   * Default: false
-   */
-  fallback?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<PermissionGuardProps>(), {
   requireAll: false,
   fallback: false,
   permission: undefined,

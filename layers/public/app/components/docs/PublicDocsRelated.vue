@@ -3,18 +3,7 @@ import { computed } from 'vue';
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { Card, CardContent } from '~/layers/shared/app/components/ui/card';
 import { Separator } from '~/layers/shared/app/components/ui/separator';
-
-type PublicDocsRelatedLink = {
-  label: string;
-  to?: string;
-  href?: string;
-};
-
-type PublicDocsMetaItem = {
-  label: string;
-  value: string;
-  description?: string;
-};
+import type { PublicDocsRelatedLink, PublicDocsMetaItem } from '~/layers/public/types';
 
 const props = defineProps<{
   title?: string;

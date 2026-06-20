@@ -1,14 +1,5 @@
 <script setup lang="ts">
-type PublicDocsTocGroup = {
-  title: string;
-  collapsible?: boolean;
-  items: {
-    label: string;
-    href: string;
-    tabValue?: string;
-    active?: boolean;
-  }[];
-};
+import type { PublicDocsTocGroup } from '~/layers/public/types';
 
 defineProps<{
   title: string;

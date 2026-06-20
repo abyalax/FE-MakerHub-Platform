@@ -5,12 +5,9 @@ import * as z from 'zod';
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/layers/shared/app/components/ui/form';
 import { useLogin } from '../composables/useLogin';
+import type { LoginFormProps } from '../types';
 
-interface Props {
-  redirectUrl?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<LoginFormProps>(), {
   redirectUrl: '/dashboard',
 });
 

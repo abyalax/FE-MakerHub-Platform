@@ -7,6 +7,7 @@ import { Badge } from '~/layers/shared/app/components/ui/badge';
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { Card, CardContent } from '~/layers/shared/app/components/ui/card';
 import { Progress } from '~/layers/shared/app/components/ui/progress';
+import type { LessonContentBlock } from '~/layers/learnings/types';
 
 const emit = defineEmits<{
   openRoadmap: [];
@@ -30,17 +31,6 @@ const lessonPosition = computed(() => {
   if (!active) return 'Lesson';
   return `Lesson ${active.index + 1} of ${classroomStore.flatLessons.length}`;
 });
-
-type LessonContentBlock = {
-  key: string;
-  type: 'heading' | 'paragraph' | 'bulletList' | 'orderedList' | 'blockquote' | 'codeBlock' | 'horizontalRule' | 'image';
-  text?: string;
-  id?: string;
-  level?: number;
-  items?: string[];
-  src?: string;
-  alt?: string;
-};
 
 const getNodeText = (node: JSONContent): string => {
   if (typeof node.text === 'string') return node.text;
@@ -66,7 +56,7 @@ const renderedContentBlocks = computed<LessonContentBlock[]>(() => {
   const usedIds = new Map<string, number>();
 
   return nodes
-    .map((node, index): LessonContentBlock | null => {
+    .map((node: JSONContent, index: number): LessonContentBlock | null => {
       const key = `${node.type ?? 'node'}-${index}`;
       const text = getNodeText(node).trim();
 
@@ -91,7 +81,7 @@ const renderedContentBlocks = computed<LessonContentBlock[]>(() => {
           type: node.type,
           items: node.content
             .map(getNodeText)
-            .map((item) => item.trim())
+            .map((item: string) => item.trim())
             .filter(Boolean),
         };
       }
@@ -107,12 +97,12 @@ const renderedContentBlocks = computed<LessonContentBlock[]>(() => {
 
       return null;
     })
-    .filter((block): block is LessonContentBlock => Boolean(block));
+    .filter((block: LessonContentBlock | null): block is LessonContentBlock => Boolean(block));
 });
 </script>
 
 <template>
-  <main class="flex h-full min-h-0 flex-col overflow-hidden rounded-4xl border bg-card text-card-foreground shadow-sm">
+  <main class="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm">
     <header class="border-b bg-card/80 px-4 py-3 backdrop-blur md:px-6">
       <div class="flex items-center justify-between gap-3">
         <Button variant="outline" size="icon" class="lg:hidden" aria-label="Open course structure" @click="emit('openRoadmap')">
@@ -140,11 +130,11 @@ const renderedContentBlocks = computed<LessonContentBlock[]>(() => {
 
     <div class="min-h-0 flex-1 overflow-y-auto bg-muted/40">
       <div v-if="lesson" class="mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-8">
-        <section v-if="lesson.videoAsset?.publicUrl" class="overflow-hidden rounded-4xl border bg-primary shadow-2xl">
+        <section v-if="lesson.videoAsset?.publicUrl" class="overflow-hidden rounded-2xl border bg-primary shadow-2xl">
           <video :src="lesson.videoAsset.publicUrl" controls class="aspect-video w-full" />
         </section>
 
-        <section v-else class="grid min-h-70 place-items-center rounded-4xl border bg-primary p-8 text-center text-primary-foreground shadow-2xl">
+        <section v-else class="grid min-h-70 place-items-center rounded-2xl border bg-primary p-8 text-center text-primary-foreground shadow-2xl">
           <div>
             <PlayCircle class="mx-auto size-14 text-primary-foreground/80" />
             <h3 class="mt-5 text-2xl font-bold">Text-first lesson</h3>
@@ -155,7 +145,7 @@ const renderedContentBlocks = computed<LessonContentBlock[]>(() => {
         </section>
 
         <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
-          <article class="rounded-4xl border bg-card p-5 shadow-sm md:p-8">
+          <article class="rounded-2xl border bg-card p-5 shadow-sm md:p-8">
             <div class="mb-6 flex items-start justify-between gap-4">
               <div>
                 <p class="text-sm font-semibold text-primary">{{ lessonPosition }}</p>
@@ -203,17 +193,13 @@ const renderedContentBlocks = computed<LessonContentBlock[]>(() => {
               </template>
             </div>
 
-            <!-- <div v-else-if="lesson.content" class="whitespace-pre-wrap text-base leading-8 text-foreground">
-              {{ lesson.content }}
-            </div> -->
-
             <p v-else class="rounded-2xl border border-dashed bg-muted p-5 text-sm text-muted-foreground">
               Lesson content has not been added yet. The classroom shell still keeps navigation, progress, and completion controls available.
             </p>
           </article>
 
           <aside class="space-y-4">
-            <Card class="rounded-4xl shadow-sm">
+            <Card class="rounded-2xl shadow-sm">
               <CardContent class="p-5">
                 <div class="flex items-center gap-3">
                   <span class="flex size-10 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground">
@@ -229,7 +215,7 @@ const renderedContentBlocks = computed<LessonContentBlock[]>(() => {
               </CardContent>
             </Card>
 
-            <Card class="rounded-4xl bg-primary text-primary-foreground shadow-sm">
+            <Card class="rounded-2xl bg-primary text-primary-foreground shadow-sm">
               <CardContent class="p-5">
                 <p class="text-sm font-medium text-primary-foreground/70">Up next</p>
                 <h3 class="mt-2 text-lg font-bold">{{ classroomStore.nextLesson?.title ?? 'Final lesson reached' }}</h3>

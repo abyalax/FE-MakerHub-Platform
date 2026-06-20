@@ -1,11 +1,25 @@
 import type { Entitlement } from '~/layers/entitlements/types';
 import type { LearningClass } from '~/layers/learnings/types';
 import type { Payment } from '~/layers/payments/types';
-import type { GeneratedEventTicket, Ticket } from '~/layers/temp';
 import type { PaymentProvider } from '~/layers/shared/app/common/enum';
 import type { OrderStatus } from '~/layers/shared/app/types/enum';
 import type { SubscriptionPlan } from '~/layers/subscriptions/types';
 import type { User } from '~/layers/users/types';
+
+export interface Ticket {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+}
+
+export interface GeneratedEventTicket {
+  id: string;
+  orderId: string;
+  ticketId: string;
+  qrCode?: string;
+  status: string;
+}
 
 export interface OrderItem {
   id: string;

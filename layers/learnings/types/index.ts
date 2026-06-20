@@ -96,6 +96,9 @@ export interface ClassroomSection {
   title: string;
   sortOrder: number;
   lessons: ClassroomLesson[];
+  project?: {
+    contentJson?: JSONContent | null;
+  };
 }
 
 export interface ClassroomLesson {
@@ -118,5 +121,19 @@ export interface LessonDetail extends ClassroomLesson {
     id: string;
     projectId: string;
     title: string;
+    project?: {
+      contentJson?: JSONContent | null;
+    };
   };
 }
+
+export type LessonContentBlock = {
+  key: string;
+  type: 'heading' | 'paragraph' | 'bulletList' | 'orderedList' | 'blockquote' | 'codeBlock' | 'horizontalRule' | 'image';
+  text?: string;
+  id?: string;
+  level?: number;
+  items?: string[];
+  src?: string;
+  alt?: string;
+};

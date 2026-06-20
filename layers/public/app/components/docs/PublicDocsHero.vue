@@ -9,16 +9,7 @@ import {
   BreadcrumbSeparator,
 } from '~/layers/shared/app/components/ui/breadcrumb';
 import { Tabs, TabsList, TabsTrigger } from '~/layers/shared/app/components/ui/tabs';
-
-type PublicDocsBreadcrumb = {
-  label: string;
-  to?: string;
-};
-
-type PublicDocsTab = {
-  label: string;
-  value: string;
-};
+import type { PublicDocsBreadcrumb, PublicDocsTab } from '~/layers/public/types';
 
 defineProps<{
   breadcrumbs: PublicDocsBreadcrumb[];

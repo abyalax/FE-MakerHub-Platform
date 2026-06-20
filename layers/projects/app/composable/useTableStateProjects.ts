@@ -127,6 +127,8 @@ export const useTableStateProjects = () => {
         }
 
         for (const update of updated) {
+          if (!update.id) continue;
+
           const payload: UpdateProjectPayload = {
             title: update.changes.title,
             summary: update.changes.summary,
@@ -139,7 +141,7 @@ export const useTableStateProjects = () => {
           };
 
           await updateProjectMutation.mutateAsync({
-            id: update.id,
+            id: update.id as string | number,
             payload,
           });
         }

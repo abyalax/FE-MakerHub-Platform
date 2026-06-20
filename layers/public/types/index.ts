@@ -42,3 +42,36 @@ export interface ProjectPublic {
   learningCategorySlug?: string;
   learningTitle?: string;
 }
+
+export type PublicDocsBreadcrumb = {
+  label: string;
+  to?: string;
+};
+
+export type PublicDocsTab = {
+  label: string;
+  value: string;
+};
+
+export type PublicDocsRelatedLink = {
+  label: string;
+  to?: string;
+  href?: string;
+};
+
+export type PublicDocsMetaItem = {
+  label: string;
+  value: string;
+  description?: string;
+};
+
+export type PublicDocsTocGroup = {
+  title: string;
+  collapsible?: boolean;
+  items: {
+    label: string;
+    href: string;
+    tabValue?: string;
+    active?: boolean;
+  }[];
+};
