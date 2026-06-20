@@ -1,5 +1,6 @@
 import type { ClassType, ContentStatus, EnrollmentStatus } from '~/layers/shared/app/common/enum';
 import type { Category, Project, LessonProgress, ProjectProgress } from '~/layers/projects/types';
+import type { JSONContent } from '@tiptap/vue-3';
 
 export interface LearningClass {
   id: string;
@@ -102,6 +103,7 @@ export interface ClassroomLesson {
   sectionId: string;
   title: string;
   content?: string;
+  contentJson?: JSONContent | null;
   isPreview: boolean;
   sortOrder: number;
   progress?: LessonProgress;
