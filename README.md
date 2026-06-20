@@ -2,6 +2,11 @@
 
 Nuxt 4 frontend for MakerHub. This app consumes the MakerHub backend API, so the backend must be configured and running before login and API-backed pages will work.
 
+## Repository
+
+- Frontend: [https://github.com/abyalax/FE-MakerHub-Platform](https://github.com/abyalax/FE-MakerHub-Platform)
+- Backend: [https://github.com/abyalax/BE-MakerHub-Platform](https://github.com/abyalax/BE-MakerHub-Platform)
+
 ## Prerequisites
 
 1. Install Node.js from [nodejs.org](https://nodejs.org/).
