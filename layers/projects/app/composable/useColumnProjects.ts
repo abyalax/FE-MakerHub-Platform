@@ -6,7 +6,6 @@ import { Input } from '~/layers/shared/app/components/ui/input';
 import { Button } from '~/layers/shared/app/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/layers/shared/app/components/ui/tooltip';
 import { createCrudSelectColumn, crudCellControlProps } from '~/layers/shared/app/composable/table/crud';
-import FilterProjects from '~/layers/users/app/components/filters/FilterRoleUsers.vue';
 import type { Project } from '../../types/index.js';
 import { ContentStatus } from '~/layers/shared/app/common/enum';
 
@@ -222,7 +221,7 @@ export const useColumnProjects = (params: Params): ColumnDef<Project>[] => {
           h('span', { class: 'text-xs text-muted-foreground font-mono' }, textValue(project.currency)),
           h(Input, {
             modelValue: String(params.crud.getFieldValue(project, 'price') ?? ''),
-            'onUpdate:modelValue': (value: string | number) => params.crud.handleFieldChange(project, 'price', String(value) as any),
+            'onUpdate:modelValue': (value: string | number) => params.crud.handleFieldChange(project, 'price', Number(value)),
             type: 'number',
             placeholder: '0.00',
             class: 'h-8 w-full',
@@ -239,18 +238,10 @@ export const useColumnProjects = (params: Params): ColumnDef<Project>[] => {
       cell: ({ row }) => {
         const project = row.original;
 
-        if (!params.crud.isRowEditable(project)) {
-          return h('div', { class: 'text-sm' }, [
-            h('div', {}, project.category?.name ?? emptyValue),
-            project.category?.slug ? h('div', { class: 'text-xs text-muted-foreground' }, project.category.slug) : null,
-          ]);
-        }
-
-        return h(FilterProjects, {
-          project: project,
-          crud: params.crud,
-          controlProps: crudCellControlProps,
-        } as any);
+        return h('div', { class: 'text-sm' }, [
+          h('div', {}, project.category?.name ?? emptyValue),
+          project.category?.slug ? h('div', { class: 'text-xs text-muted-foreground' }, project.category.slug) : null,
+        ]);
       },
     },
 

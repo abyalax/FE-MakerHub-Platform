@@ -25,10 +25,7 @@ const loginSchema = toTypedSchema(
 
 const form = useForm({
   validationSchema: loginSchema,
-  initialValues: {
-    email: 'admin@gmail.com',
-    password: 'Password1_',
-  },
+  initialValues: {},
 });
 
 const onSubmit = form.handleSubmit((values) =>

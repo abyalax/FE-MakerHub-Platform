@@ -1,311 +1,112 @@
-# Nuxt Layers Starter
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# MakerHub Frontend
 
-# Quick Start Guide - Nuxt 4 Layers Architecture
+Nuxt 4 frontend for MakerHub. This app consumes the MakerHub backend API, so the backend must be configured and running before login and API-backed pages will work.
 
-## Project Structure
+## Prerequisites
 
-```
-project-root/
-├── layers/                          # ALL application code
-│   ├── shared/                      # Foundation layer (loaded first)
-│   │   ├── app/
-│   │   │   ├── app.vue             # Root component
-│   │   │   ├── components/         # Shared UI & layouts
-│   │   │   ├── composables/        # Shared composables
-│   │   │   ├── layouts/            # Global layouts
-│   │   │   ├── lib/                # Utilities
-│   │   │   └── assets/css/         # Global CSS
-│   │   ├── nuxt.config.ts
-│   │   └── CLAUDE.md
-│   │
-│   ├── 1-auth/                     # Feature: Authentication
-│   │   ├── app/
-│   │   │   ├── components/         # Auth components
-│   │   │   ├── composables/        # Auth logic (types, api, store)
-│   │   │   ├── pages/              # Login page
-│   │   │   └── middleware/         # Auth guard
-│   │   ├── server/
-│   │   │   ├── api/auth/          # Login, logout, register endpoints
-│   │   │   └── utils/
-│   │   ├── nuxt.config.ts
-│   │   └── CLAUDE.md
-│   │
-│   └── 2-users/                    # Feature: User Management
-│       ├── app/
-│       │   ├── components/         # User components
-│       │   ├── composables/        # User logic
-│       │   ├── pages/users/        # Users list & detail
-│       │   └── utils/
-│       ├── server/
-│       │   ├── api/users/         # User CRUD endpoints
-│       │   └── utils/
-│       ├── nuxt.config.ts
-│       └── CLAUDE.md
-│
-├── nuxt.config.ts                  # Root configuration
-├── package.json                    # Dependencies
-└── LAYERS.md                       # Architecture documentation
-```
+1. Install Node.js from [nodejs.org](https://nodejs.org/).
+   - Use the LTS version.
+   - Verify the installation:
 
----
+     ```bash
+     node --version
+     npm --version
+     ```
 
-## Key Concepts
+2. Install pnpm:
 
-### 1. Layer Priority (Alphabetical Order)
-```
-shared         → Priority 0 (loaded first)
-1-auth         → Priority 1
-2-users        → Priority 2
-3-...          → Priority 3 (future features)
-```
+   ```bash
+   npm install -g pnpm
+   ```
 
-**Lower number = Foundation** | **Higher number = Override**
+   Verify the installation:
 
-### 2. Naming Convention
-- Layers: Use hyphens → `1-feature-name`
-- Components: PascalCase → `<AuthCard />`
-- Composables: camelCase → `useAuthStore()`
+   ```bash
+   pnpm --version
+   ```
 
-### 3. Auto-Imports (No manual import needed!)
-```typescript
-// ✅ Composables: Auto-imported
-const authStore = useAuthStore()
+## Backend Requirement
 
-// ✅ Components: Auto-imported by filename
-<AuthCard />
+This frontend needs the backend API to be running.
 
-// ❌ Utils: Manual import required
-import { cn } from '~/layers/shared/app/lib/utils'
-```
-
----
-
-## Common Tasks
-
-### Create a New Feature Layer
+Expected local API URL:
 
 ```bash
-# 1. Create folder
-mkdir layers/3-feature-name
-
-# 2. Create minimal config
-# layers/3-feature-name/nuxt.config.ts
-export default defineNuxtConfig({})
-
-# 3. Create documentation
-# layers/3-feature-name/CLAUDE.md
-
-# 4. Create directory structure
-mkdir -p layers/3-feature-name/app/components
-mkdir -p layers/3-feature-name/app/composables
-mkdir -p layers/3-feature-name/app/pages
-mkdir -p layers/3-feature-name/app/utils
-mkdir -p layers/3-feature-name/server/api
-mkdir -p layers/3-feature-name/server/utils
+http://localhost:4000
 ```
 
-### Add a Composable
+Start the backend from the backend app directory:
 
-```typescript
-// layers/1-auth/app/composables/useAuthForm.ts
-export function useAuthForm() {
-  const form = useForm({
-    validationSchema: toTypedSchema(loginSchema)
-  })
-  
-  return {
-    form,
-    // ... methods
-  }
-}
-
-// ✅ Auto-imported in components - no import needed!
-<script setup>
-const { form } = useAuthForm()
-</script>
+```bash
+cd ../be
+pnpm install
+pnpm migrate:run
+pnpm seed:run
+pnpm dev
 ```
 
-### Add a Component
+Keep the backend terminal running while using the frontend.
 
-```vue
-<!-- layers/1-auth/app/components/AuthCard.vue -->
-<template>
-  <div class="auth-card">
-    <!-- Form content -->
-  </div>
-</template>
+## Frontend Setup
 
-<!-- ✅ Auto-imported as <AuthCard /> -->
+Run these commands from the frontend directory:
+
+```bash
+cd fe
+pnpm install
 ```
 
-### Add an API Route
+Create a local environment file:
 
-```typescript
-// layers/1-auth/server/api/auth/login.post.ts
-export default defineEventHandler(async (event) => {
-  const { email, password } = await readBody(event)
-  
-  // Validate & authenticate
-  
-  return {
-    token: 'jwt-token',
-    user: { id: '1', email }
-  }
-})
-
-// ✅ Available as POST /api/auth/login
+```bash
+cp .env.example .env
 ```
 
-### Add State with Pinia
+Set the backend API URL in `.env`:
 
-```typescript
-// layers/2-users/app/composables/useUsersStore.ts
-import { defineStore } from 'pinia'
-
-export const useUsersStore = defineStore('users', () => {
-  const users = ref([])
-  const loading = ref(false)
-  
-  async function fetchUsers() {
-    loading.value = true
-    try {
-      users.value = await $fetch('/api/users')
-    } finally {
-      loading.value = false
-    }
-  }
-  
-  return { users, loading, fetchUsers }
-})
-
-// ✅ Use in any component
-const store = useUsersStore()
-await store.fetchUsers()
+```env
+API_BASE_URL=http://localhost:4000
+NUXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-### Use Form Validation (vee-validate)
+If your backend runs on a different port, update `API_BASE_URL` to match it.
 
-```vue
-<script setup lang="ts">
-import { z } from 'zod'
+## Run the App
 
-const schema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(6, 'Min 6 chars')
-})
+Start the Nuxt development server:
 
-const { handleSubmit, values } = useForm({
-  validationSchema: toTypedSchema(schema)
-})
-</script>
-
-<template>
-  <VeeForm @submit="handleSubmit(onSubmit)">
-    <VeeField name="email" />
-    <VeeField name="password" type="password" />
-    <button type="submit">Login</button>
-  </VeeForm>
-</template>
+```bash
+pnpm dev
 ```
 
----
+Open the app in your browser:
 
-## Important Rules
+```bash
+http://localhost:3000
+```
 
-### ✅ DO:
-- ✅ Keep layers independent
-- ✅ Put feature code in feature layer (not shared)
-- ✅ Use Pinia for state management
-- ✅ Validate on server-side
-- ✅ Type your data with TypeScript
-- ✅ Document each layer with CLAUDE.md
+## Login Accounts
 
-### ❌ DON'T:
-- ❌ Create root-level `app/` folder
-- ❌ Mix feature logic with shared layer
-- ❌ Use prop drilling (use Pinia instead)
-- ❌ Import utilities without checking auto-import first
-- ❌ Trust client-side validation alone
-- ❌ Create unnumbered layers (always use {N}-pattern)
+After the backend migrations and seeders have run, use one of these seeded accounts:
 
----
+| Role | Name | Email | Password |
+| --- | --- | --- | --- |
+| Admin | Alex Admin | `admin@gmail.com` | `Password1_` |
+| Mentor | Rezi Mentor | `rezi.mentor@gmail.com` | `Password1_` |
+| Student | Lexi Student | `lexi.student@gmail.com` | `Password1_` |
 
 ## Useful Commands
 
 ```bash
-# Development
-pnpm dev              # Start dev server (http://localhost:3000)
-pnpm build            # Build for production
-pnpm preview          # Preview production build
-
-# Code Quality
-pnpm lint             # Check code style
-pnpm lint:fix         # Auto-fix code style issues
-
-# Dependencies
-pnpm install          # Install dependencies
-pnpm add package      # Add new dependency
+pnpm dev       # Start local development server
+pnpm build     # Build for production
+pnpm test:run  # Run Vitest tests once
+pnpm test:e2e  # Run Playwright tests
+pnpm lint      # Run ESLint
 ```
 
----
+## Troubleshooting
 
-## File Locations Quick Reference
-
-| Type | Location | Auto-Import |
-| --- | --- | --- |
-| Component | `app/components/*.vue` | ✅ Yes |
-| Composable | `app/composables/*.ts` | ✅ Yes |
-| Page | `app/pages/**/*.vue` | ✅ Yes |
-| Layout | `app/layouts/*.vue` | ✅ Yes |
-| Middleware | `app/middleware/*.ts` | ✅ Yes |
-| Plugin | `app/plugins/*.ts` | ✅ Yes |
-| Utility | `app/utils/*.ts` | ❌ No |
-| API Route | `server/api/**/*.ts` | ✅ Yes |
-| Type | Via `#alias` | Via alias |
-
----
-
-## Data Flow Pattern
-
-```
-Component
-    ↓
-Composable (useStore)
-    ↓
-Pinia Store (manages state)
-    ↓
-API Service (useApi)
-    ↓
-$fetch / useFetch
-    ↓
-Server API Route
-    ↓
-Database / External Service
-```
-
----
-
-## Layer Documentation
-
-Each layer should have `CLAUDE.md` explaining:
-- Layer purpose and features
-- Available components & composables
-- API endpoints
-- Usage examples
-- Testing notes
-
-See existing CLAUDE.md files for templates.
-
----
-
-## Need Help?
-
-1. Check `LAYERS.md` for comprehensive architecture guide
-2. Review `CLAUDE.md` in each layer for details
-3. Look at existing implementations in layers/shared, layers/1-auth
-4. Run `pnpm lint` to catch issues early
-
---
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- If login fails, confirm the backend is running and `API_BASE_URL` points to it.
+- If seeded accounts do not work, rerun backend migrations and seeders from `be/`.
+- If dependencies fail to install, confirm Node.js and pnpm are installed correctly.

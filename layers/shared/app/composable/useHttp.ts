@@ -103,6 +103,11 @@ export const useHttp = () => {
     return refreshPromise;
   };
 
+  const handle401Error = async () => {
+    authStore.clearAuth();
+    await navigateTo('/login');
+  };
+
   const requestWithRefresh = async <T>(request: FetchRequest, options?: HttpOptions, useRaw = false): Promise<T> => {
     try {
       return useRaw ? ((await client.raw<unknown>(request, options)) as T) : ((await client<unknown>(request, options)) as T);
@@ -112,23 +117,38 @@ export const useHttp = () => {
       const skipRefresh = shouldSkipRefresh(request);
       const isExpired = isTokenExpiredError(error);
 
-      if (status !== 401 || alreadyRetried || skipRefresh || !isExpired) throw error;
+      // Handle 401 errors
+      if (status === 401) {
+        // Jika sudah di-retry atau skip refresh, langsung redirect ke login
+        if (alreadyRetried || skipRefresh) {
+          await handle401Error();
+          throw error;
+        }
 
-      try {
-        await refreshAuth();
-        await nextTick();
-      } catch (refreshError) {
-        authStore.clearAuth();
-        await navigateTo('/login');
-        throw refreshError;
+        // Coba refresh token jika error adalah token expired
+        if (isExpired) {
+          try {
+            await refreshAuth();
+            await nextTick();
+
+            const retryOptions = {
+              ...options,
+              __authRefreshAttempted: true,
+            } satisfies HttpOptions;
+
+            return useRaw ? ((await client.raw<unknown>(request, retryOptions)) as T) : ((await client<unknown>(request, retryOptions)) as T);
+          } catch (refreshError) {
+            await handle401Error();
+            throw refreshError;
+          }
+        } else {
+          // Jika 401 tapi bukan token expired, langsung redirect
+          await handle401Error();
+          throw error;
+        }
       }
 
-      const retryOptions = {
-        ...options,
-        __authRefreshAttempted: true,
-      } satisfies HttpOptions;
-
-      return useRaw ? ((await client.raw<unknown>(request, retryOptions)) as T) : ((await client<unknown>(request, retryOptions)) as T);
+      throw error;
     }
   };
 

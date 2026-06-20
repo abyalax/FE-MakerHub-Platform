@@ -60,7 +60,7 @@ function goToPage(page: number) {
         </SelectTrigger>
 
         <SelectContent>
-          <SelectItem value="">All types</SelectItem>
+          <SelectItem :value="undefined">All types</SelectItem>
           <SelectItem :value="ClassType.FREE">Free</SelectItem>
           <SelectItem :value="ClassType.PAID">Paid</SelectItem>
         </SelectContent>
